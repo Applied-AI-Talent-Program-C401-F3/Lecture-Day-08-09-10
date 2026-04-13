@@ -41,7 +41,7 @@ def _ask_llm_as_judge(prompt: str) -> Dict[str, Any]:
 # CẤU HÌNH
 # =============================================================================
 
-TEST_QUESTIONS_PATH = Path(__file__).parent / "data" / "test_questions.json"
+TEST_QUESTIONS_PATH = Path(__file__).parent / "data" / "grading_questions.json"
 RESULTS_DIR = Path(__file__).parent / "results"
 
 # Cấu hình baseline (Sprint 2)
@@ -483,7 +483,7 @@ if __name__ == "__main__":
         print("  ...")
 
     except FileNotFoundError:
-        print("Không tìm thấy file test_questions.json!")
+        print("Không tìm thấy file grading_questions.json!")
         test_questions = []
 
     # --- Chạy Baseline ---
