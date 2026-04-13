@@ -51,7 +51,9 @@ Sử dụng `text-embedding-3-small` (OpenAI). Lý do: Hiệu năng cao, kích t
 | `use_rerank` | `false` | `true` |
 | LLM | `gpt-4o` | `gpt-4o` |
 
-**Biến thay đổi:** Chuyển từ `dense` sang `hybrid`, tăng `top_k` và kích hoạt `rerank`.
+**Biến thay đổi chính:** Chuyển từ `dense` sang `hybrid`.
+
+**Lưu ý A/B rule:** Trong quy trình tuning, nhóm ưu tiên đọc kết quả theo từng vòng thử nghiệm một biến. Việc tăng `top_k` và bật `rerank` được xem là bước mở rộng sau khi đã xác nhận hướng cải thiện của retrieval mode.
 
 **Lý do chọn hybrid & rerank:** Qua quan sát baseline, dense retrieval gặp khó khăn với các từ khóa đặc thù như mã lỗi (ERR-403) hoặc các thực thể viết tắt. Hybrid giúp cân bằng giữa ngữ nghĩa và từ khóa chính xác. Rerank (Cross-Encoder) được thêm vào để lọc lại 5 chunk tốt nhất từ 15 candidate, đảm bảo context đưa vào prompt có độ liên quan cao nhất.
 
@@ -103,7 +105,10 @@ Chỉ có điểm delta faithfulness là thay đổi.
 
 | Vai trò | Thành viên | Sprint chính | Công việc cụ thể |
 |---------|-----------|-------------|-------------------|
-| **Documentation Owner**| Khương Hải Lâm | Sprint 3, 4 | Ghi Tuning Log, thực hiện AB testing, tối ưu Prompt Engineering và viết báo cáo. |
+| **Retrieval Owner** | Hoàng Quốc Hùng | Sprint 1, 3 | Tối ưu chunking/metadata, triển khai dense-sparse-hybrid retrieval, phối hợp rerank và phân tích failure mode theo scorecard. |
+| **Documentation Owner** | Khương Hải Lâm | Sprint 3, 4 | Ghi Tuning Log, thực hiện AB testing, tối ưu Prompt Engineering và viết báo cáo. |
+
+Đóng góp Retrieval Owner tập trung vào 3 điểm: (1) đảm bảo chunk đủ ngữ cảnh và metadata dùng được cho citation/debug, (2) chọn chiến lược retrieval phù hợp với truy vấn có mã lỗi/alias, (3) truy vết lỗi theo Error Tree để tách bạch lỗi retrieval với lỗi generation.
 
 ---
 
