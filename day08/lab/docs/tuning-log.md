@@ -70,10 +70,14 @@ top_k_search = 15
 use_rerank = True
 ```
 
+Lưu ý phương pháp: để đúng A/B rule, lần thử nghiệm chính thức được ghi nhận là đổi retrieval mode từ `dense` sang `hybrid`; các thay đổi tham số khác chỉ xem là nhánh thử mở rộng và cần tách thành thí nghiệm riêng nếu muốn kết luận nhân quả.
+
 **Lý do chọn biến này:**
 > TOP_K_SEARCH: Tăng từ 10 lên 15 để có thể truy xuất được nhiều chunk hơn
 > Hybrid được sử dụng để giải quyết vấn đề câu hỏi 7 và 9, mà trước đây dense không giải quyết tốt
 > Rerank = true: chọn ra 03 tài liệu có liên quan nhất để trả lời câu hỏi
+
+Trong các truy vấn kỹ thuật như `ERR-403-AUTH`, retrieval theo ngữ nghĩa thuần dễ bỏ sót đoạn chứa đúng mã lỗi. Hybrid giúp giữ được cả matching theo nghĩa và matching theo từ khóa cứng.
 
 
 **Config thay đổi:**
@@ -84,6 +88,8 @@ top_k_search = 15
 use_rerank = True
 # Các tham số còn lại giữ nguyên như baseline
 ```
+
+Khuyến nghị ghi log vòng sau: giữ nguyên `top_k_search`, `overlap`, `use_rerank` và chỉ đổi `retrieval_mode` để so sánh sạch hơn.
 
 **Scorecard Variant 1:**
 | Metric | Average Score |
