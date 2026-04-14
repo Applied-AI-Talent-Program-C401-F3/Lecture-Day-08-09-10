@@ -33,8 +33,8 @@ index.py (Sprint 1)          rag_answer.py (Sprint 2+3)        eval.py (Sprint 4
 
 | Tham số | Giá trị | Lý do |
 |---------|---------|-------|
-| Chunk size | 300 tokens | Phù hợp với các điều khoản ngắn trong chính sách và FAQ |
-| Overlap | 50 tokens | Đảm bảo không mất ngữ cảnh tại các điểm cắt giữa đoạn |
+| Chunk size | 400 tokens | Phù hợp với các điều khoản ngắn trong chính sách và FAQ |
+| Overlap | 80 tokens | Đảm bảo không mất ngữ cảnh tại các điểm cắt giữa đoạn |
 | Split strategy | Section-based (`=== ... ===`) → paragraph split | Tận dụng cấu trúc tài liệu sẵn có để giữ tính toàn vẹn của thông tin |
 
 ### 2.2. Embedding Model
@@ -107,6 +107,8 @@ Chỉ có điểm delta faithfulness là thay đổi.
 |---------|-----------|-------------|-------------------|
 | **Retrieval Owner** | Hoàng Quốc Hùng | Sprint 1, 3 | Tối ưu chunking/metadata, triển khai dense-sparse-hybrid retrieval, phối hợp rerank và phân tích failure mode theo scorecard. |
 | **Documentation Owner** | Khương Hải Lâm | Sprint 3, 4 | Ghi Tuning Log, thực hiện AB testing, tối ưu Prompt Engineering và viết báo cáo. |
+| **Documentation Owner** | Đặng Tuấn Anh | Sprint 4 | Viết Architecture Overview, code script xuất log, hoàn thiện các file scorecard. |
+
 
 Đóng góp Retrieval Owner tập trung vào 3 điểm: (1) đảm bảo chunk đủ ngữ cảnh và metadata dùng được cho citation/debug, (2) chọn chiến lược retrieval phù hợp với truy vấn có mã lỗi/alias, (3) truy vết lỗi theo Error Tree để tách bạch lỗi retrieval với lỗi generation.
 
