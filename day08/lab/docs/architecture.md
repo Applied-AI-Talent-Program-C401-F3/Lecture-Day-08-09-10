@@ -41,6 +41,8 @@ Hệ thống là một trợ lý nội bộ phục vụ cho khối Customer Supp
 | Chunking strategy | Heading-based, Section-based và Regex | Chia văn bản theo từng tiêu đề phần mục lớn (Section) bằng regex `===.*?===`, sau đó ngắt thành doạn nhỏ ở từng khoảng trắng hoặc theo dấu `?` trong FAQ, để tránh vỡ cấu trúc và nội dung câu hỏi. |
 | Metadata fields | source, section, effective_date, department, access | Phục vụ filter, freshness, citation |
 
+Trong triển khai thực tế, Retrieval Owner giữ nguyên `chunk_size=400`, `overlap=80` để giảm đứt mạch ngữ cảnh; đồng thời ưu tiên đủ metadata tối thiểu (`source`, `section`, `effective_date`) trước khi tối ưu các bước retrieval nâng cao.
+
 ### Embedding model
 - **Model**: OpenAI `text-embedding-3-small`
 - **Vector store**: ChromaDB (PersistentClient)
@@ -69,6 +71,8 @@ Hệ thống là một trợ lý nội bộ phục vụ cho khối Customer Supp
 
 **Lý do chọn variant này:**
 Giải pháp Variant Hybrid cùng với Cross-encoder (Reranker) được lựa chọn bởi vì trong cơ sở dữ liệu có các quy tắc, các đoạn mã lỗi, mã số vé (ví dụ như ERR-403-AUTH hoặc ticket P1) rất khó có thể tìm ra nếu chỉ đánh giá bằng sự tương đồng ngữ nghĩa (Dense Semantic). Việc kết hợp BM25 Sparse Search giúp nắm bắt các exact keyword tốt hơn nhiều. Hơn nữa, Reranker là điều cốt lõi bù trừ điểm yếu vì kết hợp 2 cách tra cứu này tạo ra nhiều văn bản ít liên quan lọt top (Noise), reranker sẽ có sức mạnh sắp xếp lại chính xác từng đoạn văn nào thực sự chứa đáp án.
+
+Trong quá trình tuning, nhóm ưu tiên nguyên tắc A/B: trước hết đổi retrieval mode (dense -> hybrid) và giữ nguyên các tham số còn lại để đo tác động retrieval một cách độc lập.
 
 ---
 
@@ -110,6 +114,7 @@ Answer:
 | Index lỗi | Retrieve về docs cũ / sai version | `inspect_metadata_coverage()` trong index.py |
 | Chunking tệ | Chunk cắt giữa điều khoản | `list_chunks()` và đọc text preview |
 | Retrieval lỗi | Không tìm được expected source | `score_context_recall()` trong eval.py |
+| Retrieval lệch keyword/alias | Có source gần đúng nhưng thiếu chunk chứa mã lỗi/từ khóa cứng | So sánh dense vs hybrid với cùng query kỹ thuật |
 | Generation lỗi | Answer không grounded / bịa | `score_faithfulness()` trong eval.py |
 | Token overload | Context quá dài → lost in the middle | Kiểm tra độ dài context_block |
 
@@ -146,3 +151,6 @@ graph TD
     I --> J[LLM Generation]
     J --> K[Grounded Answer + Citations]
 ```
+
+---
+
